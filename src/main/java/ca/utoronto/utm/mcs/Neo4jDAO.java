@@ -25,6 +25,7 @@ public class Neo4jDAO {
         query = String.format(query, actorId);
         Result result = this.session.run(query);
         if(result.hasNext()){
+            System.out.println("Actor Found: " + actorId);
             return false;
         }
         query = "CREATE (a:actor {name: \"%s\", actorId: \"%s\"})";
