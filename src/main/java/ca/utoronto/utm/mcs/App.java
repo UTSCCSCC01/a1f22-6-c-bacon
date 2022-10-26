@@ -2,6 +2,8 @@ package ca.utoronto.utm.mcs;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
+import com.sun.net.httpserver.HttpServer;
+import java.net.InetSocketAddress;
 
 public class App
 {
@@ -9,6 +11,10 @@ public class App
 
     public static void main(String[] args) throws IOException
     {
+        HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
+        server.createContext("/api/v1/", new ReqHandler());
+        server.start();
+
         // TODO Create Your Server Context Here, There Should Only Be One Context
         System.out.printf("Server started on port %d\n", port);
 
