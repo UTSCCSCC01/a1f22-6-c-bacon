@@ -1,6 +1,8 @@
 package ca.utoronto.utm.mcs;
 
 import java.io.IOException;
+import java.net.URI;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONException;
@@ -18,23 +20,34 @@ public class ReqHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        
+        URI requestURI = exchange.getRequestURI();
+        String query = requestURI.getQuery();
+        String request = requestURI.toString().split("/")[3];
+        System.out.println(request);
         try {
             switch (exchange.getRequestMethod()) {
                 case "GET":
-                    //this.handleGet(exchange);
                     break;
                 case "POST":
-                    this.handlePost(exchange);
+                    switch (request) {
+                        case "addActor":
+                            this.addActor(exchange);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
                     break;
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void handlePost(HttpExchange r) throws IOException, JSONException {
+    public void addActor(HttpExchange r) throws IOException, JSONException {
         String body = Utils.convert(r.getRequestBody());
         try {
             JSONObject deserialized = new JSONObject(body);
@@ -50,7 +63,10 @@ public class ReqHandler implements HttpHandler {
             }
 
             try {
-                this.dao.addActor(name, actorId);
+                if(this.dao.addActor(name, actorId) == false){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } catch (Exception e) {
                 r.sendResponseHeaders(500, -1);
                 e.printStackTrace();

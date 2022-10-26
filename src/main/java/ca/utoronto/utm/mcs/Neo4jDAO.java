@@ -16,13 +16,20 @@ public class Neo4jDAO {
     public Neo4jDAO() {
         this.driver = GraphDatabase.driver(this.uriDb, AuthTokens.basic(this.username, this.password));
         this.session = this.driver.session();
+        
     }
 
-    public void addActor(String name, String actorId) {
+    public boolean addActor(String name, String actorId) {
         String query;
+        query = "MATCH (a:actor { actorId: \"%s\"}) RETURN a.actorId";
+        query = String.format(query, actorId);
+        Result result = this.session.run(query);
+        if(result.hasNext()){
+            return false;
+        }
         query = "CREATE (a:actor {name: \"%s\", actorId: \"%s\"})";
         query = String.format(query, name, actorId);
         this.session.run(query);
-        return;
+        return true;
     }
 }
