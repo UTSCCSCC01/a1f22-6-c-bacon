@@ -11,10 +11,11 @@ public class App
 
     public static void main(String[] args) throws IOException
     {
-        ReqHandlerComponent component = DaggerReqHandlerComponent.create();
-        HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
-        server.createContext("/api/v1/", component.buildHandler());
-        server.start();
+        ReqHandlerComponent handlerComponent = DaggerReqHandlerComponent.create();
+        ServerComponent serverComponent = DaggerServerComponent.create();
+        Server server = serverComponent.buildServer();
+        server.createContext("/api/v1/", handlerComponent.buildHandler());
+        server.startServer();
 
         // TODO Create Your Server Context Here, There Should Only Be One Context
         System.out.printf("Server started on port %d\n", port);
