@@ -1,6 +1,7 @@
 package ca.utoronto.utm.mcs;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -28,8 +29,15 @@ public class ReqHandler implements HttpHandler {
         try {
             switch (exchange.getRequestMethod()) {
                 case "GET":
+                    switch (request) {
+                        case "getActor":
+                            this.getActor(exchange);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
-                case "POST":
+                case "PUT":
                     switch (request) {
                         case "addActor":
                             this.addActor(exchange);
@@ -73,6 +81,39 @@ public class ReqHandler implements HttpHandler {
                 return;
             }
             r.sendResponseHeaders(200, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+
+    public void getActor(HttpExchange r) throws IOException, JSONException {
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String actorId;
+
+            if (deserialized.has("actorId")) {
+                actorId = deserialized.getString("actorId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            String response = this.dao.getActor(actorId);
+            try {
+                if(response.equals("404")){
+                    r.sendResponseHeaders(404, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                r.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            r.sendResponseHeaders(200, response.length());
+            OutputStream os = r.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
         } catch (Exception e) {
             e.printStackTrace();
             r.sendResponseHeaders(500, -1);
