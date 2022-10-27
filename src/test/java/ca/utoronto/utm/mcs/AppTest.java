@@ -78,4 +78,68 @@ public class AppTest {
         HttpResponse<String> confirmRes = sendRequest("/api/v1/addRelationship", "PUT", confirmReq.toString());
         assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
     }
+    @Test
+    public void getActorPass() throws JSONException, IOException, InterruptedException {
+        JSONObject setupReq = new JSONObject()
+                     .put("name", "TestActor")
+                     .put("actorId", "12345678901");
+        HttpResponse<String> setupRes = sendRequest("/api/v1/addActor", "PUT", setupReq.toString());
+
+        JSONObject confirmReq = new JSONObject()
+                .put("actorId", "12345678901");
+        HttpResponse<String> confirmRes = sendRequest("/api/v1/getActor", "GET", confirmReq.toString());
+
+        JSONObject deleteReq = new JSONObject()
+                .put("actorId", "12345678901");
+        HttpResponse<String> deleteRes = sendRequest("/api/v1/deleteActor", "DELETE", confirmReq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
+    }
+
+    @Test
+    public void getMoviePass() throws JSONException, IOException, InterruptedException {
+        JSONObject setupReq = new JSONObject()
+                 .put("name", "TestMovie")
+                 .put("movieId", "12345678901");
+        HttpResponse<String> setupRes = sendRequest("/api/v1/addMovie", "PUT", setupReq.toString());
+
+        JSONObject confirmReq = new JSONObject()
+                .put("movieId", "12345678901");
+        HttpResponse<String> confirmRes = sendRequest("/api/v1/getMovie", "GET", confirmReq.toString());
+
+        JSONObject deleteReq = new JSONObject()
+                .put("movieId", "12345678901");
+        HttpResponse<String> deleteRes = sendRequest("/api/v1/deleteMovie", "DELETE", confirmReq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
+    }
+
+    @Test
+    public void hasRelationshipPass() throws JSONException, IOException, InterruptedException {
+        JSONObject setupReq = new JSONObject()
+                .put("name", "TestMovie")
+                .put("movieId", "12345678901");
+        HttpResponse<String> setupRes = sendRequest("/api/v1/addMovie", "PUT", setupReq.toString());
+
+       setupReq = new JSONObject()
+                .put("name", "TestActor")
+                .put("actorId", "12345678902");
+       setupRes = sendRequest("/api/v1/addActor", "PUT", setupReq.toString());
+
+        setupReq = new JSONObject()
+                .put("movieId", "12345678901")
+                .put("actorId", "12345678902");
+        setupRes = sendRequest("/api/v1/addRelationship", "PUT", setupReq.toString());
+
+        JSONObject confirmReq = new JSONObject()
+                .put("movieId", "12345678901")
+                .put("actorId", "12345678902");
+        HttpResponse<String> confirmRes = sendRequest("/api/v1/hasRelationship", "GET", confirmReq.toString());
+
+        JSONObject deleteReq = new JSONObject()
+                .put("movieId", "12345678901");
+        HttpResponse<String> deleteRes = sendRequest("/api/v1/deleteMovie", "DELETE", confirmReq.toString());
+        deleteReq = new JSONObject()
+                .put("actorId", "12345678902");
+        deleteRes = sendRequest("/api/v1/deleteActor", "DELETE", confirmReq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
+    }
 }

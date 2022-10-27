@@ -112,6 +112,64 @@ public class Neo4jDAO {
         return response.toString();
     }
 
+    public String getMovie(String movieId) throws JSONException {
+        JSONObject response = new JSONObject();
+        String query;
+        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.name";
+        query = String.format(query, movieId);
+
+        Result result = this.session.run(query);
+        if(!result.hasNext()){
+            System.out.println("No movie with this ID");
+            return "404";
+        }
+        List<Record> resultValues = result.list();
+        response.put("movieId", movieId);
+        response.put("name", resultValues.get(0).get("m.name").asString());
+
+        query = "MATCH (a:actor)-[r:ACTED_IN]->(m:movie { id: \"%s\"}) RETURN a.id";
+        query = String.format(query, movieId);
+        result = this.session.run(query);
+        resultValues = result.list();
+        JSONArray actors = new JSONArray();
+        resultValues.forEach((record)->{actors.put(record.get("a.id").asString());});
+        response.put("actors", actors);
+        return response.toString();
+    }
+    public String hasRelationship(String actorId, String movieId) throws JSONException {
+        JSONObject response = new JSONObject();
+        String query;
+
+        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.name";
+        query = String.format(query, movieId);
+        Result result = this.session.run(query);
+        if(!result.hasNext()){
+            System.out.println("No movie with this ID");
+            return "404";
+        }
+
+        query = "MATCH (a:actor { id: \"%s\"}) RETURN a.name";
+        query = String.format(query, actorId);
+        result = this.session.run(query);
+        if(!result.hasNext()){
+            System.out.println("No actor with this ID");
+            return "404";
+        }
+
+        response.put("movieId", movieId);
+        response.put("actorId", actorId);
+
+        query = "MATCH (a:actor  { id: \"%s\"})-[r:ACTED_IN]->(m:movie { id: \"%s\"}) RETURN r";
+        query = String.format(query, actorId,movieId);
+        result = this.session.run(query);
+        if(!result.hasNext()){
+            response.put("hasRelationship", false);
+        }else{
+            response.put("hasRelationship", true);
+        }
+        return response.toString();
+    }
+
     public String computeBaconNumber(String actorId) throws JSONException{
         JSONObject response = new JSONObject();
         String query;
@@ -164,5 +222,22 @@ public class Neo4jDAO {
         }
         response.put("baconPath", path);
         return response.toString();
+    }
+
+    public void deleteMovie(String movieId) throws JSONException {
+        JSONObject response = new JSONObject();
+        String query;
+
+        query = "MATCH (m:movie { movieId: \"%s\"}) DETACH DELETE m";
+        query = String.format(query, movieId);
+        Result result = this.session.run(query);
+    }
+
+    public void deleteActor(String actorId) throws JSONException {
+        JSONObject response = new JSONObject();
+        String query;
+        query = "MATCH (a:actor { actorId: \"%s\"}) DETACH DELETE a";
+        query = String.format(query, actorId);
+        Result result = this.session.run(query);
     }
 }
