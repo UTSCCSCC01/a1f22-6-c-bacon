@@ -36,6 +36,12 @@ public class ReqHandler implements HttpHandler {
                         case "getActor":
                             this.getActor(exchange);
                             break;
+                        case "computeBaconPath":
+                            this.computeBaconPath(exchange);
+                            break;
+                        case "computeBaconNumber":
+                            this.computeBaconNumber(exchange);
+                            break;
                         default:
                             break;
                     }
@@ -80,16 +86,13 @@ public class ReqHandler implements HttpHandler {
             }
 
             try {
-                if(this.dao.addActor(name, actorId) == false){
-                    r.sendResponseHeaders(400, -1);
-                    return;
-                }
+                r.sendResponseHeaders(this.dao.addActor(name, actorId), -1);
+                return;
             } catch (Exception e) {
                 r.sendResponseHeaders(500, -1);
                 e.printStackTrace();
                 return;
             }
-            r.sendResponseHeaders(200, -1);
         } catch (Exception e) {
             e.printStackTrace();
             r.sendResponseHeaders(500, -1);
@@ -112,16 +115,13 @@ public class ReqHandler implements HttpHandler {
             }
 
             try {
-                if(this.dao.addMovie(name, movieId) == false){
-                    r.sendResponseHeaders(400, -1);
-                    return;
-                }
+                r.sendResponseHeaders(this.dao.addMovie(name, movieId), -1);
+                return;
             } catch (Exception e) {
                 r.sendResponseHeaders(500, -1);
                 e.printStackTrace();
                 return;
             }
-            r.sendResponseHeaders(200, -1);
         } catch (Exception e) {
             e.printStackTrace();
             r.sendResponseHeaders(500, -1);
@@ -171,6 +171,72 @@ public class ReqHandler implements HttpHandler {
                 return;
             }
             String response = this.dao.getActor(actorId);
+            try {
+                if(response.equals("404")){
+                    r.sendResponseHeaders(404, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                r.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            r.sendResponseHeaders(200, response.length());
+            OutputStream os = r.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+
+    public void computeBaconNumber(HttpExchange r) throws IOException, JSONException{
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String actorId;
+
+            if (deserialized.has("actorId")) {
+                actorId = deserialized.getString("actorId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            String response = this.dao.computeBaconNumber(actorId);
+            try {
+                if(response.equals("404")){
+                    r.sendResponseHeaders(404, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                r.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            r.sendResponseHeaders(200, response.length());
+            OutputStream os = r.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+
+    public void computeBaconPath(HttpExchange r) throws IOException, JSONException{
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String actorId;
+
+            if (deserialized.has("actorId")) {
+                actorId = deserialized.getString("actorId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            String response = this.dao.computeBaconPath(actorId);
             try {
                 if(response.equals("404")){
                     r.sendResponseHeaders(404, -1);
