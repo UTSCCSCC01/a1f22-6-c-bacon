@@ -61,6 +61,18 @@ public class ReqHandler implements HttpHandler {
                             break;
                     }
                     break;
+                case "DELETE":
+                    switch (request) {
+                        case "deleteActor":
+                            this.deleteActor(exchange);
+                            break;
+                        case "deleteMovie":
+                            this.deleteMovie(exchange);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -256,6 +268,44 @@ public class ReqHandler implements HttpHandler {
             OutputStream os = r.getResponseBody();
             os.write(response.getBytes());
             os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+    public void deleteActor(HttpExchange r) throws IOException {
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String actorId;
+
+            if (deserialized.has("actorId")) {
+                actorId = deserialized.getString("actorId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            this.dao.deleteActor(actorId);
+            r.sendResponseHeaders(200, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+    public void deleteMovie(HttpExchange r) throws IOException {
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String movieId;
+
+            if (deserialized.has("movieId")) {
+                movieId = deserialized.getString("movieId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            this.dao.deleteMovie(movieId);
+            r.sendResponseHeaders(200, -1);
         } catch (Exception e) {
             e.printStackTrace();
             r.sendResponseHeaders(500, -1);
