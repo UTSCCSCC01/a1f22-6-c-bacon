@@ -36,6 +36,12 @@ public class ReqHandler implements HttpHandler {
                         case "getActor":
                             this.getActor(exchange);
                             break;
+                        case "getMovie":
+                            this.getMovie(exchange);
+                            break;
+                        case "hasRelationship":
+                            this.hasRelationship(exchange);
+                            break;
                         default:
                             break;
                     }
@@ -158,7 +164,7 @@ public class ReqHandler implements HttpHandler {
         }
     }
 
-    public void getActor(HttpExchange r) throws IOException, JSONException {
+    public void getActor(HttpExchange r) throws IOException {
         String body = Utils.convert(r.getRequestBody());
         try {
             JSONObject deserialized = new JSONObject(body);
@@ -171,6 +177,71 @@ public class ReqHandler implements HttpHandler {
                 return;
             }
             String response = this.dao.getActor(actorId);
+            try {
+                if(response.equals("404")){
+                    r.sendResponseHeaders(404, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                r.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            r.sendResponseHeaders(200, response.length());
+            OutputStream os = r.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+    public void getMovie(HttpExchange r) throws IOException {
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String movieId;
+
+            if (deserialized.has("movieId")) {
+                movieId = deserialized.getString("movieId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            String response = this.dao.getMovie(movieId);
+            try {
+                if(response.equals("404")){
+                    r.sendResponseHeaders(404, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                r.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            r.sendResponseHeaders(200, response.length());
+            OutputStream os = r.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            r.sendResponseHeaders(500, -1);
+        }
+    }
+    public void hasRelationship(HttpExchange r) throws IOException {
+        String body = Utils.convert(r.getRequestBody());
+        try {
+            JSONObject deserialized = new JSONObject(body);
+            String movieId, actorId;
+
+            if (deserialized.has("actorId") && deserialized.has("movieId")) {
+                movieId = deserialized.getString("movieId");
+                actorId = deserialized.getString("actorId");
+            } else {
+                r.sendResponseHeaders(400, -1);
+                return;
+            }
+            String response = this.dao.hasRelationship(actorId, movieId);
             try {
                 if(response.equals("404")){
                     r.sendResponseHeaders(404, -1);
