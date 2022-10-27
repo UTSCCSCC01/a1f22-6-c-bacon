@@ -68,7 +68,7 @@ public class ReqHandler implements HttpHandler {
 
             String name, actorId;
 
-            if (deserialized.length() == 2 && deserialized.has("name") && deserialized.has("actorId")) {
+            if (deserialized.has("name") && deserialized.has("actorId")) {
                 name = deserialized.getString("name");
                 actorId = deserialized.getString("actorId");
             } else {
@@ -100,7 +100,7 @@ public class ReqHandler implements HttpHandler {
 
             String name, movieId;
 
-            if (deserialized.length() == 2 && deserialized.has("name") && deserialized.has("movieId")) {
+            if (deserialized.has("name") && deserialized.has("movieId")) {
                 name = deserialized.getString("name");
                 movieId = deserialized.getString("movieId");
             } else {
@@ -132,7 +132,7 @@ public class ReqHandler implements HttpHandler {
 
             String actorId, movieId;
 
-            if (deserialized.length() == 2 && deserialized.has("actorId") && deserialized.has("movieId")) {
+            if (deserialized.has("actorId") && deserialized.has("movieId")) {
                 actorId = deserialized.getString("actorId");
                 movieId = deserialized.getString("movieId");
             } else {
