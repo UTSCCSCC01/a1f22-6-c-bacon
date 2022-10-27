@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 
+import javax.inject.Inject;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONException;
@@ -13,10 +15,11 @@ public class ReqHandler implements HttpHandler {
 
     // TODO Complete This Class
 
-    public Neo4jDAO dao;
+    private Neo4jDAO dao;
 
-    public ReqHandler() {
-        this.dao = new Neo4jDAO();
+    @Inject
+    public ReqHandler(Neo4jDAO dao) {
+        this.dao = dao;
     }
 
     @Override

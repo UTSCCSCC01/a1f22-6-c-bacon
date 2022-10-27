@@ -11,8 +11,9 @@ public class App
 
     public static void main(String[] args) throws IOException
     {
+        ReqHandlerComponent component = DaggerReqHandlerComponent.create();
         HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
-        server.createContext("/api/v1/", new ReqHandler());
+        server.createContext("/api/v1/", component.buildHandler());
         server.start();
 
         // TODO Create Your Server Context Here, There Should Only Be One Context

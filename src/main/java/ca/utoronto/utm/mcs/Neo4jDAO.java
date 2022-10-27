@@ -4,7 +4,10 @@ import org.json.*;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 
+
 import java.util.List;
+
+import javax.inject.Inject;
 
 // All your database transactions or queries should 
 // go in this class
@@ -16,9 +19,9 @@ public class Neo4jDAO {
     private final String username = "neo4j";
     private final String password = "123456";
 
-
-    public Neo4jDAO() {
-        this.driver = GraphDatabase.driver(this.uriDb, AuthTokens.basic(this.username, this.password));
+    @Inject
+    public Neo4jDAO(Driver driver) {
+        this.driver = driver;
         this.session = this.driver.session();
         
     }
