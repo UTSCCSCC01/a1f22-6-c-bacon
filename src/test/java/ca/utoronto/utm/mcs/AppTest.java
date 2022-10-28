@@ -149,16 +149,10 @@ public class AppTest {
 
     @Test
     public void getMovieFail() throws JSONException, IOException, InterruptedException {
-        JSONObject setupReq = new JSONObject()
-                     .put("name", "TestMovie")
-                     .put("actorId", "12345678901");
-        sendRequest("/api/v1/addMovie", "PUT", setupReq.toString());
-
         JSONObject confirmReq = new JSONObject()
                 .put("name", "TestMovie");
         HttpResponse<String> confirmRes = sendRequest("/api/v1/getMovie", "GET", confirmReq.toString());
 
-        sendRequest("/api/v1/deleteMovie", "DELETE", setupReq.toString());
         assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
     }
 
