@@ -40,7 +40,7 @@ public class AppTest {
     public void addActorPass() throws JSONException, IOException, InterruptedException {
         JSONObject confirmReq = new JSONObject()
                 .put("name", "TestActor")
-                .put("actorId", "12345678901");
+                .put("actorId", "");
         HttpResponse<String> confirmRes = sendRequest("/api/v1/addActor", "PUT", confirmReq.toString());
         sendRequest("/api/v1/deleteActor", "DELETE", confirmReq.toString());
         assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
