@@ -29,7 +29,6 @@ public class Neo4jDAO {
         query = String.format(query, id);
         Result result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Actor Found: " + id);
             return 400;
         }
         query = "CREATE (a:actor {Name: \"%s\", id: \"%s\"})";
@@ -44,7 +43,6 @@ public class Neo4jDAO {
         query = String.format(query, id);
         Result result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Movie Found: " + id);
             return 400;
         }
         query = "CREATE (m:movie {Name: \"%s\", id: \"%s\"})";
@@ -59,7 +57,6 @@ public class Neo4jDAO {
         query = String.format(query, actorId);
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("Actor not found: " + actorId);
             return 404;
         }
 
@@ -67,7 +64,6 @@ public class Neo4jDAO {
         query = String.format(query, movieId);
         result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("Movie not found: " + movieId);
             return 404;
         }
 
@@ -75,7 +71,6 @@ public class Neo4jDAO {
         query = String.format(query, actorId, movieId);
         result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Relationship Found: " + actorId +"->"+ movieId);
             return 400;
         }
 
@@ -93,7 +88,6 @@ public class Neo4jDAO {
 
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No actor with this ID");
             return "404";
         }
         List<Record> resultValues = result.list();
@@ -114,17 +108,16 @@ public class Neo4jDAO {
     public String getMovie(String movieId) throws JSONException {
         JSONObject response = new JSONObject();
         String query;
-        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.name";
+        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.Name";
         query = String.format(query, movieId);
 
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No movie with this ID");
             return "404";
         }
         List<Record> resultValues = result.list();
         response.put("movieId", movieId);
-        response.put("name", resultValues.get(0).get("m.name").asString());
+        response.put("name", resultValues.get(0).get("m.Name").asString());
 
         query = "MATCH (a:actor)-[r:ACTED_IN]->(m:movie { id: \"%s\"}) RETURN a.id";
         query = String.format(query, movieId);
@@ -139,19 +132,17 @@ public class Neo4jDAO {
         JSONObject response = new JSONObject();
         String query;
 
-        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.name";
+        query = "MATCH (m:movie { id: \"%s\"}) RETURN m.Name";
         query = String.format(query, movieId);
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No movie with this ID");
             return "404";
         }
 
-        query = "MATCH (a:actor { id: \"%s\"}) RETURN a.name";
+        query = "MATCH (a:actor { id: \"%s\"}) RETURN a.Name";
         query = String.format(query, actorId);
         result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No actor with this ID");
             return "404";
         }
 
@@ -183,7 +174,6 @@ public class Neo4jDAO {
         
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No path");
             return "404";
         }
         Record record = result.next();
@@ -210,9 +200,7 @@ public class Neo4jDAO {
         query = String.format(query, actorId, kevinBid);
         
         Result result = this.session.run(query);
-        System.out.println(result);
         if(!result.hasNext()){
-            System.out.println("No path");
             return "404";
         }
         Record record = result.next();
@@ -224,19 +212,17 @@ public class Neo4jDAO {
     }
 
     public void deleteMovie(String movieId) throws JSONException {
-        JSONObject response = new JSONObject();
         String query;
 
         query = "MATCH (m:movie { id: \"%s\"}) DETACH DELETE m";
         query = String.format(query, movieId);
-        Result result = this.session.run(query);
+       this.session.run(query);
     }
 
     public void deleteActor(String actorId) throws JSONException {
-        JSONObject response = new JSONObject();
         String query;
         query = "MATCH (a:actor { id: \"%s\"}) DETACH DELETE a";
         query = String.format(query, actorId);
-        Result result = this.session.run(query);
+        this.session.run(query);
     }
 }

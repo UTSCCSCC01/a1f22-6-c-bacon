@@ -27,7 +27,6 @@ public class ReqHandler implements HttpHandler {
         
         URI requestURI = exchange.getRequestURI();
         String request = requestURI.toString().split("/")[3];
-        System.out.println(request);
         try {
             switch (exchange.getRequestMethod()) {
                 case "GET":
@@ -101,6 +100,10 @@ public class ReqHandler implements HttpHandler {
             if (deserialized.has("name") && deserialized.has("actorId")) {
                 name = deserialized.getString("name");
                 actorId = deserialized.getString("actorId");
+                if(name.isEmpty() || actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -130,6 +133,10 @@ public class ReqHandler implements HttpHandler {
             if (deserialized.has("name") && deserialized.has("movieId")) {
                 name = deserialized.getString("name");
                 movieId = deserialized.getString("movieId");
+                if(name.isEmpty() || movieId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -159,6 +166,10 @@ public class ReqHandler implements HttpHandler {
             if (deserialized.has("actorId") && deserialized.has("movieId")) {
                 actorId = deserialized.getString("actorId");
                 movieId = deserialized.getString("movieId");
+                if(movieId.isEmpty() || actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -187,6 +198,10 @@ public class ReqHandler implements HttpHandler {
 
             if (deserialized.has("actorId")) {
                 actorId = deserialized.getString("actorId");
+                if(actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -220,6 +235,10 @@ public class ReqHandler implements HttpHandler {
 
             if (deserialized.has("movieId")) {
                 movieId = deserialized.getString("movieId");
+                if(movieId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -253,6 +272,10 @@ public class ReqHandler implements HttpHandler {
             if (deserialized.has("actorId") && deserialized.has("movieId")) {
                 movieId = deserialized.getString("movieId");
                 actorId = deserialized.getString("actorId");
+                if(movieId.isEmpty() || actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
@@ -286,6 +309,10 @@ public class ReqHandler implements HttpHandler {
             
             if (deserialized.has("actorId")) {
                 actorId = deserialized.getString("actorId");
+                if(actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 
                 r.sendResponseHeaders(400, -1);
@@ -320,6 +347,10 @@ public class ReqHandler implements HttpHandler {
 
             if (deserialized.has("actorId")) {
                 actorId = deserialized.getString("actorId");
+                if(actorId.isEmpty()){
+                    r.sendResponseHeaders(400, -1);
+                    return;
+                }
             } else {
                 r.sendResponseHeaders(400, -1);
                 return;
