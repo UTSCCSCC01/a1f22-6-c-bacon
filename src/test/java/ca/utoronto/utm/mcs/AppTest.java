@@ -151,7 +151,7 @@ public class AppTest {
     public void getMovieFail() throws JSONException, IOException, InterruptedException {
         JSONObject setupReq = new JSONObject()
                      .put("name", "TestMovie")
-                     .put("actorId", "12345678901");
+                     .put("movieId", "12345678901");
         sendRequest("/api/v1/addMovie", "PUT", setupReq.toString());
 
         JSONObject confirmReq = new JSONObject()
