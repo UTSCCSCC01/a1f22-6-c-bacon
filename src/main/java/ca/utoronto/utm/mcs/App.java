@@ -2,8 +2,6 @@ package ca.utoronto.utm.mcs;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
-import com.sun.net.httpserver.HttpServer;
-import java.net.InetSocketAddress;
 
 public class App
 {
