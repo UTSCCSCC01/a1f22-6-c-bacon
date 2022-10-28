@@ -26,7 +26,6 @@ public class ReqHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         
         URI requestURI = exchange.getRequestURI();
-        String query = requestURI.getQuery();
         String request = requestURI.toString().split("/")[3];
         System.out.println(request);
         try {
@@ -49,6 +48,7 @@ public class ReqHandler implements HttpHandler {
                             this.computeBaconNumber(exchange);
                             break;
                         default:
+                            this.apiDNE(exchange);
                             break;
                     }
                     break;
@@ -64,6 +64,7 @@ public class ReqHandler implements HttpHandler {
                             this.addRelationship(exchange);
                             break;
                         default:
+                            this.apiDNE(exchange);
                             break;
                     }
                     break;
@@ -76,10 +77,12 @@ public class ReqHandler implements HttpHandler {
                             this.deleteMovie(exchange);
                             break;
                         default:
+                            this.apiDNE(exchange);
                             break;
                     }
                     break;
                 default:
+                    this.apiDNE(exchange);
                     break;
             }
             
@@ -280,10 +283,11 @@ public class ReqHandler implements HttpHandler {
         try {
             JSONObject deserialized = new JSONObject(body);
             String actorId;
-
+            
             if (deserialized.has("actorId")) {
                 actorId = deserialized.getString("actorId");
             } else {
+                
                 r.sendResponseHeaders(400, -1);
                 return;
             }
@@ -378,5 +382,10 @@ public class ReqHandler implements HttpHandler {
             e.printStackTrace();
             r.sendResponseHeaders(500, -1);
         }
+    }
+
+    public void apiDNE(HttpExchange r) throws IOException {
+        r.sendResponseHeaders(404, -1);
+        return;
     }
 }

@@ -3,7 +3,6 @@ package ca.utoronto.utm.mcs;
 import org.json.*;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.types.Path;
 
 import java.util.List;
 
@@ -228,7 +227,7 @@ public class Neo4jDAO {
         JSONObject response = new JSONObject();
         String query;
 
-        query = "MATCH (m:movie { movieId: \"%s\"}) DETACH DELETE m";
+        query = "MATCH (m:movie { id: \"%s\"}) DETACH DELETE m";
         query = String.format(query, movieId);
         Result result = this.session.run(query);
     }
@@ -236,7 +235,7 @@ public class Neo4jDAO {
     public void deleteActor(String actorId) throws JSONException {
         JSONObject response = new JSONObject();
         String query;
-        query = "MATCH (a:actor { actorId: \"%s\"}) DETACH DELETE a";
+        query = "MATCH (a:actor { id: \"%s\"}) DETACH DELETE a";
         query = String.format(query, actorId);
         Result result = this.session.run(query);
     }
