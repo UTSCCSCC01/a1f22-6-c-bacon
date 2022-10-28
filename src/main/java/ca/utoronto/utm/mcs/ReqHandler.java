@@ -27,7 +27,6 @@ public class ReqHandler implements HttpHandler {
         
         URI requestURI = exchange.getRequestURI();
         String request = requestURI.toString().split("/")[3];
-        System.out.println(request);
         try {
             switch (exchange.getRequestMethod()) {
                 case "GET":

@@ -29,7 +29,6 @@ public class Neo4jDAO {
         query = String.format(query, id);
         Result result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Actor Found: " + id);
             return 400;
         }
         query = "CREATE (a:actor {Name: \"%s\", id: \"%s\"})";
@@ -44,7 +43,6 @@ public class Neo4jDAO {
         query = String.format(query, id);
         Result result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Movie Found: " + id);
             return 400;
         }
         query = "CREATE (m:movie {Name: \"%s\", id: \"%s\"})";
@@ -59,7 +57,6 @@ public class Neo4jDAO {
         query = String.format(query, actorId);
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("Actor not found: " + actorId);
             return 404;
         }
 
@@ -67,7 +64,6 @@ public class Neo4jDAO {
         query = String.format(query, movieId);
         result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("Movie not found: " + movieId);
             return 404;
         }
 
@@ -75,7 +71,6 @@ public class Neo4jDAO {
         query = String.format(query, actorId, movieId);
         result = this.session.run(query);
         if(result.hasNext()){
-            System.out.println("Relationship Found: " + actorId +"->"+ movieId);
             return 400;
         }
 
@@ -93,7 +88,6 @@ public class Neo4jDAO {
 
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No actor with this ID");
             return "404";
         }
         List<Record> resultValues = result.list();
@@ -118,9 +112,7 @@ public class Neo4jDAO {
         query = String.format(query, movieId);
 
         Result result = this.session.run(query);
-        System.out.println(result.hasNext());
         if(!result.hasNext()){
-            System.out.println("No movie with this ID");
             return "404";
         }
         List<Record> resultValues = result.list();
@@ -144,7 +136,6 @@ public class Neo4jDAO {
         query = String.format(query, movieId);
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No movie with this ID");
             return "404";
         }
 
@@ -152,7 +143,6 @@ public class Neo4jDAO {
         query = String.format(query, actorId);
         result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No actor with this ID");
             return "404";
         }
 
@@ -184,7 +174,6 @@ public class Neo4jDAO {
         
         Result result = this.session.run(query);
         if(!result.hasNext()){
-            System.out.println("No path");
             return "404";
         }
         Record record = result.next();
@@ -211,9 +200,7 @@ public class Neo4jDAO {
         query = String.format(query, actorId, kevinBid);
         
         Result result = this.session.run(query);
-        System.out.println(result);
         if(!result.hasNext()){
-            System.out.println("No path");
             return "404";
         }
         Record record = result.next();
