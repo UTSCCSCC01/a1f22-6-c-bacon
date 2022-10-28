@@ -149,6 +149,14 @@ public class AppTest {
 
     @Test
     public void getMovieFail() throws JSONException, IOException, InterruptedException {
+<<<<<<< HEAD
+=======
+        JSONObject setupReq = new JSONObject()
+                     .put("name", "TestMovie")
+                     .put("movieId", "12345678901");
+        sendRequest("/api/v1/addMovie", "PUT", setupReq.toString());
+
+>>>>>>> 754fda16e642d645134f6af8558d3f96d4cfca5c
         JSONObject confirmReq = new JSONObject()
                 .put("name", "TestMovie");
         HttpResponse<String> confirmRes = sendRequest("/api/v1/getMovie", "GET", confirmReq.toString());
